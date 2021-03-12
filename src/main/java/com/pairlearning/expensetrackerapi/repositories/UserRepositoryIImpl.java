@@ -15,7 +15,7 @@ import com.pairlearning.expensetrackerapi.domain.User;
 import com.pairlearning.expensetrackerapi.exeptions.EtAuthExeption;
 
 @Repository
-public class UserRepositoryImpl implements UserRepository {
+public class UserRepositoryIImpl implements UserRepositoryI {
 	
 	final private static String SQL_CREATE="INSERT INTO ET_USERS(USER_ID, FIRST_NAME, LAST_NAME, EMAIL, "
 			+ "PASSWORD) VALUES (NEXTVAL('ET_USER_SEG'), ?,?,?,?)";

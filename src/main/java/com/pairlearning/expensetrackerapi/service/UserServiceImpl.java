@@ -9,19 +9,19 @@ import org.springframework.transaction.annotation.Transactional;
 
 import com.pairlearning.expensetrackerapi.domain.User;
 import com.pairlearning.expensetrackerapi.exeptions.EtAuthExeption;
-import com.pairlearning.expensetrackerapi.repositories.UserRepository;
+import com.pairlearning.expensetrackerapi.repositories.UserRepositoryI;
 
 @Service
 @Transactional
 public class UserServiceImpl implements UserService {
 
 	@Autowired
-	UserRepository userRepository;
+    UserRepositoryI userRepositoryI;
 	
 	@Override
 	public User validateUser(final String email,final String password) throws EtAuthExeption {
 		final String emailLoweCase=email.toLowerCase();
-		return userRepository.findByEmailAndPassword(emailLoweCase, password);
+		return userRepositoryI.findByEmailAndPassword(emailLoweCase, password);
 	}
 
 	@Override
@@ -32,13 +32,13 @@ public class UserServiceImpl implements UserService {
 		if(!pattern.matcher(optionalEmail.orElse("")).matches())
 			throw new EtAuthExeption("Invalid email format");
 		
-		final Integer count= userRepository.getCountByEmail(email);
+		final Integer count= userRepositoryI.getCountByEmail(email);
 		if(count > 0) 
 			throw new EtAuthExeption("Email already in used");
 		
-		final Integer userId= userRepository.create(firstName, lastName, email, password);
+		final Integer userId= userRepositoryI.create(firstName, lastName, email, password);
 		
-		return userRepository.findById(userId);	
+		return userRepositoryI.findById(userId);
 	}
 
 }

@@ -3,7 +3,7 @@ package com.pairlearning.expensetrackerapi.repositories;
 import com.pairlearning.expensetrackerapi.domain.User;
 import com.pairlearning.expensetrackerapi.exeptions.EtAuthExeption;
 
-public interface UserRepository {
+public interface UserRepositoryI {
 
 	Integer create(String firstName, String lastName, String email, String password) throws EtAuthExeption;
 	
