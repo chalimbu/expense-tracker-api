@@ -37,4 +37,14 @@ public class CategoryResource {
         }))).orElseThrow(()->new EtBadRequestExeption("the input doesn't have the needed parameters"));
 
     }
+
+    @GetMapping("/{categoryId}")
+    public ResponseEntity<Category> getCategoryById(HttpServletRequest request,
+                                                    @PathVariable("categoryId") final Integer categoryId){
+        final Optional<Integer> optUserId = Optional.ofNullable( (Integer) request.getAttribute("userId"));
+        return optUserId.map(userId->{
+            return categoryService.fetchCategoryById(userId,categoryId);
+        }).map(category ->{return new ResponseEntity<>(category,HttpStatus.OK);})
+                .orElse(new ResponseEntity<>(HttpStatus.BAD_REQUEST));
+    }
 }
