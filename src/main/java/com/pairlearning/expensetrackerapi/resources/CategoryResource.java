@@ -9,6 +9,7 @@ import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
 
 import javax.servlet.http.HttpServletRequest;
+import java.util.List;
 import java.util.Map;
 import java.util.Optional;
 
@@ -20,9 +21,12 @@ public class CategoryResource {
     CategoryService categoryService;
 
     @GetMapping("")
-    public String getAllCategories(final HttpServletRequest request){
-        final Integer userId = (Integer) request.getAttribute("userId");
-        return "Authenticated Userid: " + userId;
+    public ResponseEntity<List<Category>> getAllCategories(final HttpServletRequest request){
+        final Optional<Integer> optUserId = Optional.ofNullable( (Integer) request.getAttribute("userId"));
+        return optUserId.map(userId->{
+            final List<Category> categories=categoryService.fetchAllCategorires(userId);
+            return new ResponseEntity<>(categories,HttpStatus.OK);
+        }).orElseThrow(()->{return new EtBadRequestExeption("no able to acces the user id");});
     }
 
     @PostMapping
@@ -46,5 +50,19 @@ public class CategoryResource {
             return categoryService.fetchCategoryById(userId,categoryId);
         }).map(category ->{return new ResponseEntity<>(category,HttpStatus.OK);})
                 .orElse(new ResponseEntity<>(HttpStatus.BAD_REQUEST));
+    }
+
+    @PutMapping("/{categoryId}")
+    public ResponseEntity<Map<String,Boolean>> updateCategory(HttpServletRequest request,
+                                                              @PathVariable("categoryId") Integer categoryId,
+                                                              @RequestBody Category category){
+        final Optional<Integer> optUserId = Optional.ofNullable( (Integer) request.getAttribute("userId"));
+        return optUserId.map(userId->{
+            categoryService.updateCategory(userId,categoryId,category);
+            Map<String,Boolean> objetResult= Map.ofEntries(
+                    Map.entry("success",true)
+            );
+            return new ResponseEntity(objetResult,HttpStatus.OK);
+        }).orElseThrow(()-> new EtBadRequestExeption("missing user id in token"));
     }
 }

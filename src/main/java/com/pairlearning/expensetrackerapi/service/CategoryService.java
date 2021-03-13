@@ -14,7 +14,7 @@ public interface CategoryService {
 
     Category addCategory(final Integer userId, final String title, final String description) throws EtBadRequestExeption;
 
-    void updateCategory(final Integer userId,final Integer CategoryId, final Category category) throws EtBadRequestExeption;
+    void updateCategory(final Integer userId,final Integer categoryId, final Category category) throws EtBadRequestExeption;
 
     void removeCategoryWithAllTransactions(final Integer userId,final Integer categoryId) throws EtResourceNotFoundExeption;
 }
