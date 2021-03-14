@@ -35,8 +35,9 @@ public class TransactionServiceImpl implements TransactionServiceI{
     }
 
     @Override
-    public void updateTransaction(Integer userId, Integer categoryId, Integer transactionId, Transaction transaction) throws EtBadRequestExeption {
-
+    public void updateTransaction(final Integer userId, final Integer categoryId,
+                                  final Integer transactionId, final Transaction transaction) throws EtBadRequestExeption {
+        transactionRepositoryI.update(userId,categoryId,transactionId,transaction);
     }
 
     @Override

@@ -61,4 +61,19 @@ public class TransactionResource {
             return new ResponseEntity<>(transaction,HttpStatus.FOUND);
         }).orElseThrow(()->new EtBadRequestExeption("userId no found"));
     }
+
+    @PutMapping("{transactionId}")
+    public ResponseEntity<Map<String,Boolean>> updateTransaction(HttpServletRequest request,
+                                                      @PathVariable("categoryId")final Integer categoryId,
+                                                      @PathVariable("transactionId")final Integer transactionId,
+                                                      @RequestBody final Transaction transaction){
+        final Optional<Integer> optUserId = Optional.ofNullable( (Integer) request.getAttribute("userId"));
+        return optUserId.map(userId->{
+            transactionServiceI.updateTransaction(userId,categoryId,transactionId,transaction);
+            Map<String,Boolean> objetResult= Map.ofEntries(
+                    Map.entry("success",true)
+            );
+            return new ResponseEntity(objetResult,HttpStatus.OK);
+        }).orElseThrow(()->new EtBadRequestExeption("requiered fields not found"));
+    }
 }

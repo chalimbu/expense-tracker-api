@@ -27,6 +27,9 @@ public class TransactionRepositoryImp implements TransactionRepositoryI{
     final private static String SQL_FIND_ALL="SELECT TRANSACTION_ID, CATEGORY_ID, USER_ID, AMOUNT, NOTE," +
             "TRANSACTION_DATE FROM ET_TRANSACTIONS WHERE USER_ID = ? AND CATEGORY_ID = ?";
 
+    final private static String SQL_UPDATE= "UPDATE ET_TRANSACTIONS SET AMOUNT=?, NOTE= ?, TRANSACTION_DATE = ? " +
+            "WHERE USER_ID = ? AND CATEGORY_ID = ? AND TRANSACTION_ID = ? ";
+
 
     @Autowired
     JdbcTemplate jdbcTemplate;
@@ -68,7 +71,12 @@ public class TransactionRepositoryImp implements TransactionRepositoryI{
 
     @Override
     public void update(Integer userId, Integer categoryId, Integer transactionId, Transaction transaction) throws EtBadRequestExeption {
-
+        try{
+            jdbcTemplate.update(SQL_UPDATE,
+                    new Object[]{transaction.getAmount(),transaction.getNote(),transaction.getTransactionDate(),userId,categoryId,transactionId});
+        }catch(Throwable e){
+            throw new EtBadRequestExeption("Invalid request");
+        }
     }
 
     @Override
