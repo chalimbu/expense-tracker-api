@@ -10,6 +10,7 @@ import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
 
 import javax.servlet.http.HttpServletRequest;
+import java.util.List;
 import java.util.Map;
 import java.util.Optional;
 
@@ -38,5 +39,26 @@ public class TransactionResource {
             }));
             });
         }).orElseThrow(()->new EtBadRequestExeption("requiered fields not found"));
+    }
+
+    @GetMapping("{transactionId}")
+    public ResponseEntity<Transaction> getTransactionById(HttpServletRequest request,
+                                                          @PathVariable("categoryId") final Integer categoryId,
+                                                          @PathVariable("transactionId") final Integer transactionId){
+        final Optional<Integer> optUserId = Optional.ofNullable( (Integer) request.getAttribute("userId"));
+        return optUserId.map(userId->{
+            var transaction=transactionServiceI.fetchTransactionById(userId,categoryId,transactionId);
+            return new ResponseEntity<>(transaction,HttpStatus.FOUND);
+        }).orElseThrow(()->new EtBadRequestExeption("userId no found"));
+    }
+
+    @GetMapping("")
+    public ResponseEntity<List<Transaction>> getAllTransactions(HttpServletRequest request,
+                                                                @PathVariable("categoryId") final Integer categoryId){
+        final Optional<Integer> optUserId = Optional.ofNullable( (Integer) request.getAttribute("userId"));
+        return optUserId.map(userId->{
+            var transaction=transactionServiceI.fetchAllTransactions(userId,categoryId);
+            return new ResponseEntity<>(transaction,HttpStatus.FOUND);
+        }).orElseThrow(()->new EtBadRequestExeption("userId no found"));
     }
 }

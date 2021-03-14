@@ -24,12 +24,16 @@ public class TransactionRepositoryImp implements TransactionRepositoryI{
     final private static String SQL_FIND_BY_ID="SELECT TRANSACTION_ID, CATEGORY_ID, USER_ID, AMOUNT, NOTE," +
             "TRANSACTION_DATE FROM ET_TRANSACTIONS WHERE USER_ID = ? AND CATEGORY_ID = ? AND TRANSACTION_ID = ? ";
 
+    final private static String SQL_FIND_ALL="SELECT TRANSACTION_ID, CATEGORY_ID, USER_ID, AMOUNT, NOTE," +
+            "TRANSACTION_DATE FROM ET_TRANSACTIONS WHERE USER_ID = ? AND CATEGORY_ID = ?";
+
+
     @Autowired
     JdbcTemplate jdbcTemplate;
 
     @Override
     public List<Transaction> findAll(Integer userId, Integer categoryId) {
-        return null;
+        return jdbcTemplate.query(SQL_FIND_ALL,new Object[]{userId,categoryId},transactionRowMapper);
     }
 
     @Override
