@@ -54,8 +54,8 @@ public class CategoryResource {
 
     @PutMapping("/{categoryId}")
     public ResponseEntity<Map<String,Boolean>> updateCategory(HttpServletRequest request,
-                                                              @PathVariable("categoryId") Integer categoryId,
-                                                              @RequestBody Category category){
+                                                              @PathVariable("categoryId")final Integer categoryId,
+                                                              @RequestBody final Category category){
         final Optional<Integer> optUserId = Optional.ofNullable( (Integer) request.getAttribute("userId"));
         return optUserId.map(userId->{
             categoryService.updateCategory(userId,categoryId,category);
@@ -64,5 +64,15 @@ public class CategoryResource {
             );
             return new ResponseEntity(objetResult,HttpStatus.OK);
         }).orElseThrow(()-> new EtBadRequestExeption("missing user id in token"));
+    }
+
+    @DeleteMapping("/{categoryId}")
+    public ResponseEntity<Map<String,Boolean>> deleteCategory(HttpServletRequest request,
+                                                              @PathVariable("categoryId") Integer categoryId){
+        final Optional<Integer> optUserId = Optional.ofNullable( (Integer) request.getAttribute("userId"));
+        return optUserId.map(userId->{
+            categoryService.removeCategoryWithAllTransactions(userId,categoryId);
+            return new ResponseEntity<>(Map.ofEntries(Map.entry("succes",true)),HttpStatus.OK);
+        }).orElseThrow(()->new EtBadRequestExeption("userId not found"));
     }
 }
