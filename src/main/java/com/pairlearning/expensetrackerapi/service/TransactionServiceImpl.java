@@ -42,6 +42,6 @@ public class TransactionServiceImpl implements TransactionServiceI{
 
     @Override
     public void removeTransaction(Integer userId, Integer categoryId, Integer transactionId) throws EtResourceNotFoundExeption {
-
+        transactionRepositoryI.removeById(userId,categoryId,transactionId);
     }
 }
